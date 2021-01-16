@@ -47,10 +47,15 @@ router.post("/", (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
-  }).then((dbUserData) => {
-    //add session info when creating login routes
-    res.json(dbUserData);
-  });
+  })
+    .then((dbUserData) => {
+      //add session info when creating login routes
+      res.json(dbUserData);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 //PUT update user info
@@ -72,3 +77,25 @@ router.put("/:id", (req, res) => {
       res.status(500).json(err);
     });
 });
+
+// DELETE /api/users/1
+router.delete("/:id", (req, res) => {
+  User.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((dbUserData) => {
+      if (!dbUserData) {
+        res.status(404).json({ message: "No user found with this id" });
+        return;
+      }
+      res.json(dbUserData);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+module.exports = router;
