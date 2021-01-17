@@ -5,6 +5,9 @@ const { User, Post } = require("../../models");
 router.get("/", (req, res) => {
   User.findAll({
     //eventually exclude password
+    attributes: {
+      exclude: ["password"],
+    },
   })
     .then((dbUserData) => res.json(dbUserData))
     .catch((err) => {
@@ -17,14 +20,24 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   User.findOne({
     //eventually exclude password
+    attributes: {
+      exclude: ["password"],
+    },
     where: {
       id: req.params.id,
     },
     include: [
       {
         model: Post,
-        //   choose necessary attributes to JOIN
-        //   attributes: ['']
+        attributes: ["id", "title", "post_url", "created_at"],
+      },
+      {
+        model: Comment,
+        attributes: ["id", "comment_text", "created_at"],
+        include: {
+          model: Post,
+          attributes: ["title"],
+        },
       },
     ],
   })
@@ -50,7 +63,13 @@ router.post("/", (req, res) => {
   })
     .then((dbUserData) => {
       //add session info when creating login routes
-      res.json(dbUserData);
+      req.session.save(() => {
+        req.session.user_id = dbUserData.id;
+        req.session.username = dbUserData.username;
+        req.session.loggedIn = true;
+
+        res.json(dbUserData);
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -61,6 +80,7 @@ router.post("/", (req, res) => {
 //PUT update user info
 router.put("/:id", (req, res) => {
   User.update(req.body, {
+    individualHooks: true,
     where: {
       id: req.params.id,
     },
@@ -96,6 +116,10 @@ router.delete("/:id", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+router.post("/login", (req, res) => {
+  User.findOne;
 });
 
 module.exports = router;
