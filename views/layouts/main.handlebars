@@ -5,32 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Blog</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="/css/style.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
 </head>
 <body>
     <div class="wrapper">
         <header>
-            <h1>
-                <a href="/" class="brand-logo">Tech Blogger</a>
-            </h1>
             <nav>
-                {{#if loggedIn}}
-                    <button id="logout" class="btn-no-style">logout</button>
-                    <a href="/dashboard">Dashboard</a>
-                {{else}}
-                <a href="/login">Account</a>
-                {{/if}}
+                <div class="nav-wrapper cyan accent-4">
+                    <a href="/" class="brand-logo center">Tech Blogger</a>
+                    <ul id="nav-mobile" class="left hide-on-med-and-down" >
+                        {{#if loggedIn}}
+                            <li>
+                                <a href="/" id="logout">logout</a>
+                            </li>
+                            <li>
+                                <a href="/dashboard">Dashboard</a>
+                            </li>
+                        {{else}}
+                            <li>
+                                <a href="/login">Login/Signup</a>
+                            </li>
+                        {{/if}}
+                    </ul>
+                </div>
+                
             </nav>
         </header>
         <main class="container">
             {{{ body }}}
         </main>
-        <footer class="page-footer">
+        <footer class="page-footer cyan accent-4">
             Thanks for visiting!
         </footer>
     </div>
     {{#if loggedIn}}
     <script src="/javascript/logout.js"></script>
     {{/if}}
+    <script src="/javascript/materialize.min.js"></script>
 </body>
 </html>
